@@ -1,0 +1,53 @@
+# Grab data from the cleanbc site
+
+name: CleanBC_Update
+ 
+on:
+  schedule:
+    - cron: '11 4,16 * * *'
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build: # jobname
+    runs-on: windows-2019 # ubuntu-latest was having issues...
+    strategy:
+      matrix:
+        r-version: ['4.0.2']
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Set up R ${{ matrix.r-version }}
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.r-version }}
+          
+      - name: Cache R packages
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-shinydoc
+          restore-keys: |
+            ${{ runner.os }}-
+          
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          install.packages(c("rvest","dplyr","ggplot2","stringr","cowplot"))
+        shell: Rscript {0}
+          
+      - name: Updating data
+        run: |
+          source('cleanbc_rvest_data.R')
+        shell: Rscript {0}
+        
+      - name: Commit files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add *.png
+          git add *.csv
+          git commit -m "generated"
+          git push 
