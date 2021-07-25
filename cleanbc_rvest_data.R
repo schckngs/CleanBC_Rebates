@@ -31,12 +31,13 @@ funds_disbursed <- str_split(funds_disbursed, "Go Electric Charging")[[1]][1]
 funds_disbursed <- as.numeric(gsub(",", "", funds_disbursed))
 
 timestamp <- Sys.time()
+attr(timestamp, "tzone") <- "UTC"
 
 updatedata <- data.frame(timestamp, funds_reserved, funds_disbursed, rebate_avail)
 
 if (file.exists("CleanBC_Rebate_Funds.csv")) {
   datasaved <- read.csv("CleanBC_Rebate_Funds.csv", stringsAsFactors = F)
-  datasaved$timestamp <- as.POSIXct(datasaved$timestamp)
+  datasaved$timestamp <- as.POSIXct(datasaved$timestamp, tz = "UTC")
   savedata <- bind_rows(datasaved, updatedata)
 } else {
   savedata <- updatedata
@@ -52,18 +53,21 @@ theme_set(theme_bw())
 r <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = funds_reserved), colour = "grey30", size = 1.5) +
-  ggtitle("Funds Reserved") + xlab("Timestamp") + ylab(NULL) +
-  scale_y_continuous(labels = scales::dollar_format()) 
+  ggtitle("Funds Reserved") + xlab(NULL) + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  scale_x_datetime(date_labels = "%m-%d %H:%M")
 d <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = funds_disbursed), colour = "green", size = 1.5) +
-  ggtitle("Funds Disbursed") + xlab("Timestamp") + ylab(NULL) +
-  scale_y_continuous(labels = scales::dollar_format()) 
+  ggtitle("Funds Disbursed") + xlab(NULL) + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  scale_x_datetime(date_labels = "%m-%d %H:%M")
 a <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = rebate_avail), colour = "blue", size = 1.5) +
-  ggtitle("Rebate Available") + xlab("Timestamp") + ylab(NULL) +
-  scale_y_continuous(labels = scales::dollar_format())
+  ggtitle("Rebate Available") + xlab(NULL) + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  scale_x_datetime(date_labels = "%m-%d %H:%M")
 
 plop <- plot_grid(r, d, a, nrow = 1)
 
