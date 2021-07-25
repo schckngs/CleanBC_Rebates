@@ -46,17 +46,28 @@ write.csv(x = savedata, file = "CleanBC_Rebate_Funds.csv", quote = F, row.names 
 write.csv(x = savedata, file = "CleanBC_Rebate_Funds_backup.csv", quote = F, row.names = F)
 
 library(ggplot2)
+library(cowplot)
 theme_set(theme_bw())
 
-savedata %>%
+r <- savedata %>%
   ggplot(aes(x = timestamp)) +
-  geom_path(aes(y = funds_reserved)) +
-  ylab("Funds Reserved ($)")
-savedata %>%
+  geom_path(aes(y = funds_reserved), colour = "grey30", size = 1.5) +
+  ggtitle("Funds Reserved") + xlab("Timestamp") + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format()) 
+d <- savedata %>%
   ggplot(aes(x = timestamp)) +
-  geom_path(aes(y = funds_disbursed)) +
-  ylab("Funds Disbursed ($)")
-savedata %>%
+  geom_path(aes(y = funds_disbursed), colour = "green", size = 1.5) +
+  ggtitle("Funds Disbursed") + xlab("Timestamp") + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format()) 
+a <- savedata %>%
   ggplot(aes(x = timestamp)) +
-  geom_path(aes(y = rebate_avail)) +
-  ylab("Rebate Avail ($)")
+  geom_path(aes(y = rebate_avail), colour = "blue", size = 1.5) +
+  ggtitle("Rebate Available") + xlab("Timestamp") + ylab(NULL) +
+  scale_y_continuous(labels = scales::dollar_format())
+
+plop <- plot_grid(r, d, a, nrow = 1)
+
+ggsave(filename = "CleanBC_funds_over_time.png", plot = plop, device = "png",
+       width = 6.5, height = 2, scale = 1.7)
+
+
