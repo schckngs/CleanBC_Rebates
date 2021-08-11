@@ -55,23 +55,50 @@ r <- savedata %>%
   geom_path(aes(y = funds_reserved), colour = "grey30", size = 1.5) +
   ggtitle("Funds Reserved") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d %H:%M", breaks = "1 week")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
+                   minor_breaks = "1 day")
 d <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = funds_disbursed), colour = "green", size = 1.5) +
   ggtitle("Funds Disbursed") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d %H:%M", breaks = "1 week")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
+                   minor_breaks = "1 day")
 a <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = rebate_avail), colour = "blue", size = 1.5) +
   ggtitle("Rebate Available") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d %H:%M", breaks = "1 week")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
+                   minor_breaks = "1 day")
 
 plop <- plot_grid(r, d, a, nrow = 1)
 
 ggsave(filename = "CleanBC_funds_over_time.png", plot = plop, device = "png",
        width = 6.5, height = 2, scale = 1.7)
+
+
+# n_cars = floor(rebate_avail/3000)
+# grid_coords = expand.grid(seq(1,10,1), seq(1,10,1), KEEP.OUT.ATTRS = F, stringsAsFactors = F)
+# grid_coords$ID = 1
+# ct=2
+# while (nrow(grid_coords) < n_cars) {
+#   print(ct)
+#   gridsub <- grid_coords[grid_coords$ID==1,]
+#   gridsub$ID = ct
+#   grid_coords = bind_rows(grid_coords, gridsub)
+#   ct = ct+1
+# }
+# grid_coords = grid_coords[1:n_cars,]
+# 
+# g <- grid_coords %>% ggplot(aes(x = Var1, y = Var2)) +
+#   facet_wrap(~ID, ncol = 6) +
+#   geom_text(aes(label = emoji("red_car"))) +
+#   # geom_emoji("car") +
+#   theme_void() +
+#   theme(strip.text = element_blank()) +
+#   labs(subtitle = paste(n_cars, "EV rebates remaining!"))
+# 
+# ggsave(plot = g, filename = "Car_num.png", width = 6, height = 4, units = "in", scale = 1.5)
 
 
