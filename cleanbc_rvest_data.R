@@ -55,22 +55,22 @@ r <- savedata %>%
   geom_path(aes(y = funds_reserved), colour = "grey30", size = 1.5) +
   ggtitle("Funds Reserved") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
-                   minor_breaks = "1 day")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "2 months",
+                   minor_breaks = "1 month")
 d <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = funds_disbursed), colour = "green", size = 1.5) +
   ggtitle("Funds Disbursed") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
-                   minor_breaks = "1 day")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "2 months",
+                   minor_breaks = "1 month")
 a <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = rebate_avail), colour = "blue", size = 1.5) +
   ggtitle("Rebate Available") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "1 week",
-                   minor_breaks = "1 day")
+  scale_x_datetime(date_labels = "%m-%d", breaks = "2 months",
+                   minor_breaks = "1 month")
 
 plop <- plot_grid(r, d, a, nrow = 1)
 
