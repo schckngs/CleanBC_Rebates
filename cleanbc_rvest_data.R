@@ -55,21 +55,21 @@ r <- savedata %>%
   geom_path(aes(y = funds_reserved), colour = "grey30", size = 1.5) +
   ggtitle("Funds Reserved") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "6 months") +
+  scale_x_datetime(date_labels = "%y-%m", breaks = "6 months") +
   geom_vline(xintercept = as.POSIXct("2021-08-20"), linetype = "dashed")
 d <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = funds_disbursed), colour = "green", size = 1.5) +
   ggtitle("Funds Disbursed") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "6 months") + #
+  scale_x_datetime(date_labels = "%y-%m", breaks = "6 months") + #
   geom_vline(xintercept = as.POSIXct("2021-08-20"), linetype = "dashed")
 a <- savedata %>%
   ggplot(aes(x = timestamp)) +
   geom_path(aes(y = rebate_avail), colour = "blue", size = 1.5) +
   ggtitle("Rebate Available") + xlab(NULL) + ylab(NULL) +
   scale_y_continuous(labels = scales::dollar_format()) +
-  scale_x_datetime(date_labels = "%m-%d", breaks = "6 months") +
+  scale_x_datetime(date_labels = "%y-%m", breaks = "6 months") +
   geom_vline(xintercept = as.POSIXct("2021-08-20"), linetype = "dashed")
 
 plop <- plot_grid(r, d, a, nrow = 1)
